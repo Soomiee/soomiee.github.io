@@ -1,0 +1,183 @@
+/* This is a free layout for anyone to use!
+All I ask is that you keep this credit in-tact, or that you put my website link
+(https://nonkiru.art) somewhere on your site. 
+
+Otherwise, edit this as much as you'd like! 
+
+Last Updated: 8th December 2024 */
+
+/* These are the default colour codes for the layout.
+Changing the colour code here will update it for any element that uses it. */
+:root {
+    /* Default: Pink */
+    --primary: #3715cc;
+
+    /* Default: Light Pink */
+    --primary_light: #0037a559;
+
+    /* Default: Dark Pink */
+    --primary_dark: #c5ce4c;
+
+    /* Default: White */
+    --secondary: #2b093d;
+
+    /* Default: Brown */
+    --tertiary: #d911e0;
+
+    /* Default: Blue */
+    --link: #3a92a1;
+}
+body {
+    /* Your new background properties */
+    background-color: #060616e0;
+    background-image: linear-gradient(#00000021 1px, transparent 1px), linear-gradient(to right, #0000002f 1px, #00010fec 1px);
+    background-size: 20px 20px;
+
+    /* Kept from your original code */
+    color: var(--tertiary);
+    font-size: 16px;
+    font-family: MS Gothic, Verdana, sans-serif;
+    line-height: 18px;
+}
+
+/* Link Styling */
+a {
+    color: var(--link);
+    /* Adds a smooth effect to link hover. */
+    transition: 0.1s all ease-in-out;
+}
+
+a:hover {
+    color: var(--primary_dark);
+}
+
+/* Header Styling */
+h1 {
+    display: block;
+    font-size: 18px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+
+h2 {
+    display: block;
+    font-size: 17px;
+    margin-top: 3px;
+    margin-bottom: 7px;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+
+h3 {
+    display: block;
+    font-size: 16px;
+    margin-top: 5px;
+    margin-bottom: 3px;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+
+/* Table Styling */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table td, table th {
+    border: 1px solid var(--primary);
+    padding: 4px;
+}
+
+table th {
+    text-align: left;
+    background-color: var(--primary_light);
+}
+
+/* List Styling */
+ul {
+    list-style-image: url('img/heart_bullet.gif');
+    list-style-position: inside;
+    margin: 5px;
+    padding: 0;
+}
+
+.container {
+    background: var(--secondary);
+    border: 1px solid var(--tertiary);
+    border-radius: 2px;
+    width: 800px;
+    box-shadow: 2px 2px 0px var(--primary);
+    margin: 5px auto;
+    cursor: move;
+}
+
+.box {
+    border: 1px solid var(--primary);
+    padding: 5px;
+}
+
+.box_header {
+    border: 1px solid var(--primary);
+    background-color: var(--primary_light);
+    height: 20px;
+    padding: 5px;
+    /* This centers the text vertically. */
+    line-height: 20px;
+}
+
+/* Changes the brightness of the fake buttons on hover. Also changes the cursor. */
+.box_header img:hover {
+    filter: brightness(103%);
+    cursor: pointer;
+}
+
+/* Darkens and saturates the buttons on click. Also changes the cursor. */
+.box_header img:active {
+    filter: brightness(97%) saturate(125%);
+    cursor: pointer;
+}
+
+/* Mobile Support */
+@media only screen and (max-width: 890px) {
+    .container {
+        position: static;
+        width: 100%;
+        margin: unset;
+        margin-bottom: 5px;
+    }
+}
+
+/* --- NEW STYLES ADDED BELOW --- */
+
+/* Wrapper for side-by-side containers */
+.flex-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 5px;
+    flex-wrap: wrap; /* Allows containers to wrap on smaller screens */
+}
+
+/* Overrides for containers inside the flex wrapper to make them smaller */
+.flex-wrapper .container {
+    width: 450px;
+    margin: 0; /* Override the 'auto' margin to allow side-by-side placement */
+}
+
+/* Mobile Support for the new wrapper */
+@media only screen and (max-width: 950px) {
+    .flex-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* On smaller screens, allow containers in the fl v ex wrapper to take up more width */
+    .flex-wrapper .container {
+       width: 90%;
+    }
+}
