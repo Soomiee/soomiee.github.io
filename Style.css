@@ -1,0 +1,324 @@
+
+/* This is a free layout for anyone to use!
+All I ask is that you keep this credit in-tact, or that you put my website link
+(https://nonkiru.art) somewhere on your site. 
+
+Otherwise, edit this as much as you'd like! 
+
+Last Updated: 8th December 2024 */
+
+/* These are the default colour codes for the layout.
+Changing the colour code here will update it for any element that uses it. */
+:root {
+    /* Default: Pink */
+    --primary: #0092e7;
+
+    /* Default: Light Pink */
+    --primary_light: #97a6ea9b;
+
+    /* Default: Dark Pink */
+    --primary_dark: #eaf551;
+
+    /* Default: White */
+    --secondary: #cbb5d8;
+
+    /* Default: Brown */
+    --tertiary: #e01186;
+
+    /* Default: Blue */
+    --link: #19acc6;
+}
+body {
+    /* Your new background properties */
+    background-color: #b3b3c7e0;
+    background-image: linear-gradient(#241a5a85 1px, transparent 1px), linear-gradient(to right, #0000002f 1px, #eeebe6ec 1px);
+    background-size: 20px 20px;
+
+    /* Kept from your original code */
+    color: var(--tertiary);
+    font-size: 16px;
+    font-family: MS Gothic, Verdana, sans-serif;
+    line-height: 18px;
+
+    cursor: url('img/cursorPNG-removebg-preview.png'), auto;
+
+}
+
+/* Link Styling */
+a {
+    color: var(--link);
+    /* Adds a smooth effect to link hover. */
+    transition: 0.1s all ease-in-out;
+}
+
+a:hover {
+    color: var(--primary_dark);
+}
+
+/* Header Styling */
+h1 {
+    display: block;
+    font-size: 18px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+
+h2 {
+    display: block;
+    font-size: 17px;
+    margin-top: 3px;
+    margin-bottom: 7px;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+
+h3 {
+    display: block;
+    font-size: 16px;
+    margin-top: 5px;
+    margin-bottom: 3px;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+
+/* Table Styling */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table td, table th {
+    border: 1px solid var(--primary);
+    padding: 4px;
+}
+
+table th {
+    text-align: left;
+    background-color: var(--primary_light);
+}
+
+/* List Styling */
+ul {
+    list-style-image: url('img/heart_bullet.gif');
+    list-style-position: inside;
+    margin: 5px;
+    padding: 0;
+}
+
+.container {
+    background: var(--secondary);
+    border: 1px solid var(--tertiary);
+    border-radius: 2px;
+    width: 800px;
+    box-shadow: 2px 2px 0px var(--primary);
+    margin: 5px auto;
+    cursor: move;
+}
+
+.box {
+    border: 1px solid var(--primary);
+    padding: 5px;
+}
+
+.box_header {
+    border: 1px solid var(--primary);
+    background-color: var(--primary_light);
+    height: 20px;
+    padding: 5px;
+    /* This centers the text vertically. */
+    line-height: 20px;
+}
+
+/* Changes the brightness of the fake buttons on hover. Also changes the cursor. */
+.box_header img:hover {
+    filter: brightness(103%);
+    cursor: pointer;
+}
+
+/* Darkens and saturates the buttons on click. Also changes the cursor. */
+.box_header img:active {
+    filter: brightness(97%) saturate(125%);
+    cursor: pointer;
+}
+
+/* Mobile Support */
+@media only screen and (max-width: 890px) {
+    .container {
+        position: static;
+        width: 100%;
+        margin: unset;
+        margin-bottom: 5px;
+    }
+}
+
+/* --- NEW STYLES ADDED BELOW --- */
+
+/* Wrapper for side-by-side containers */
+.flex-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 5px;
+    flex-wrap: wrap; /* Allows containers to wrap on smaller screens */
+}
+
+/* Overrides for containers inside the flex wrapper to make them smaller */
+.flex-wrapper .container {
+    width: 450px;
+    margin: 0; /* Override the 'auto' margin to allow side-by-side placement */
+}
+
+/* Mobile Support for the new wrapper */
+@media only screen and (max-width: 950px) {
+    .flex-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* On smaller screens, allow containers in the fl v ex wrapper to take up more width */
+    .flex-wrapper .container {
+       width: 90%;
+    }
+}
+
+/* --- GALLERY STYLES --- */
+/* This container holds all the images and aligns them automatically */
+.gallery-grid {
+    display: flex;       /* Aligns items in a row */
+    flex-wrap: wrap;     /* Moves items to next line if there is no space */
+    gap: 10px;           /* Space between images */
+    justify-content: center; /* Centers images in the box */
+    padding: 10px;
+}
+
+/* This styles the actual images inside the gallery */
+.gallery-grid img {
+    height: 150px;       /* Fixed height for uniformity */
+    width: auto;         /* Width adjusts automatically */
+    border: 2px solid var(--primary); /* Adds the theme border color */
+    padding: 2px;
+    background-color: var(--primary_light);
+    transition: all 0.2s ease-in-out; /* Smooth animation for hovering */
+}
+
+/* Hover effect for images */
+.gallery-grid img:hover {
+    transform: scale(1.1); /* Slightly zooms in */
+    border-color: var(--tertiary); /* Changes border color on hover */
+    cursor: pointer;
+    z-index: 10; /* Brings image to front */
+}
+
+#drag-gallery {
+    /* Replace 'pattern.gif' with your file name */
+    background-image: url('img/ultra tv set 1972.jpg'); 
+    /*background-repeat: repeat;  Makes small images tile like a floor */
+    background-size: cover;     /* Keeps the original size */
+}
+
+
+/* --- NEW GALLERY STYLES --- */
+
+/* 1. The TV Window Layout */
+#drag-gallery-images {
+    width: 800px; /* Force width to match your TV image size */
+    background: transparent; /* Remove default background so we only see the TV */
+    border: none; /* Remove default border */
+    box-shadow: none; /* Remove default shadow */
+}
+
+/* This is the box that holds the TV background image */
+.tv-container {
+    /* Replace with your actual TV image file name if different */
+    background-image: url('img/ultra tv set 1972.jpg'); 
+    background-size: cover;
+    background-position: center;
+    width: 800px;  /* Adjust if your TV image is smaller/larger */
+    height: 600px; /* Adjust height to match your TV image ratio */
+    position: relative;
+    border-radius: 35px;
+}
+
+/* 2. The Screen Area (Where images go) */
+.tv-screen {
+    position: absolute;
+    /* These numbers position the grid INSIDE the TV glass. 
+       You may need to tweak them slightly depending on your exact image. */
+    top: 100px;    
+    left: 100px;   
+    width: 600px;  
+    height: 380px; 
+    
+    /* Layout for the images inside the screen */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    gap: 10px;
+    overflow: hidden; /* Cuts off images if they stick out of the screen */
+}
+
+/* 3. The Images inside the TV */
+.tv-screen img {
+    height: 120px; /* Smaller size to fit multiple on the screen */
+    width: auto;
+    border: 2px solid #fff;
+    transition: transform 0.2s;
+    cursor: pointer;
+}
+
+.tv-screen img:hover {
+    transform: scale(1.3); /* Big zoom effect */
+    z-index: 100;
+    border-color: var(--tertiary);
+}
+
+/* 4. The Info Window Styling */
+#drag-gallery-info {
+    width: 300px; /* Smaller, compact window for text */
+    position: absolute;
+    top: 200px;
+    left: 100px;
+}
+
+
+/* --- FIXED SIDEBAR STYLES --- */
+.sidebar {
+    position: fixed; /* Keeps the bar stuck to the screen */
+    top: 0;
+    bottom: 0;
+    width: 160px; /* You can change this width */
+    background-color: var(--secondary); /* Uses your existing background color */
+    border: 1px solid var(--primary);
+    overflow-y: auto; /* key: Allows scrolling inside the bar */
+    padding: 10px;
+    z-index: 100; /* Stays behind your draggable windows (usually z-index 999) */
+    
+    /* Custom Scrollbar to match your theme */
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) var(--secondary);
+}
+
+/* Specific styling for Left Sidebar */
+.sidebar-left {
+    left: 0;
+    border-right: 3px solid var(--tertiary); /* A thick border to separate it */
+}
+
+/* Specific styling for Right Sidebar */
+.sidebar-right {
+    right: 0;
+    border-left: 3px solid var(--tertiary);
+}
+
+/* Hide sidebars on smaller screens (Mobile) so they don't crush your content */
+@media only screen and (max-width: 1100px) {
+    .sidebar {
+        display: none;
+    }
+}
