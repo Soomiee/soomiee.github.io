@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Storage</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2f5;min-height:100vh}
+header{background:#fff;border-bottom:1px solid #e0e0e0;padding:0 24px;height:52px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
+header h1{font-size:16px;font-weight:600;color:#1a1a1a;flex:1}
+#used-bar-wrap{display:flex;align-items:center;gap:8px;font-size:12px;color:#888}
+#used-bar{width:100px;height:6px;background:#e8e8e8;border-radius:3px;overflow:hidden}
+#used-fill{height:100%;background:#3b82f6;border-radius:3px;transition:width .3s}
+#main{display:flex;max-width:1100px;margin:0 auto;padding:20px;gap:16px}
+#sidebar{width:180px;min-width:180px;display:flex;flex-direction:column;gap:4px}
+.sb-label{font-size:11px;font-weight:600;color:#aaa;padding:4px 10px 6px;letter-spacing:.06em;text-transform:uppercase}
+.sb-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;cursor:pointer;font-size:13px;color:#555;transition:background .1s}
+.sb-item:hover{background:#e8ecf5}
+.sb-item.active{background:#dbeafe;color:#1d4ed8;font-weight:500}
+.sb-item i{font-size:15px}
+#panel{flex:1;background:#fff;border-radius:12px;border:1px solid #e8e8e8;overflow:hidden;display:flex;flex-direction:column}
+#toolbar{height:52px;display:flex;align-items:center;gap:8px;padding:0 16px;border-bottom:1px solid #f0f0f0}
+.tbtn{background:none;border:1px solid #ddd;border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;color:#555;display:flex;align-items:center;gap:5px;transition:background .1s;font-family:inherit;white-space:nowrap}
+.tbtn:hover{background:#f5f5f5}
+.tbtn.primary{background:#3b82f6;color:#fff;border-color:transparent}
+.tbtn.primary:hover{background:#2563eb}
+.tbtn.danger{color:#dc2626;border-color:#fca5a5}
+.tbtn.danger:hover{background:#fef2f2}
+.tbtn i{font-size:14px}
+#search{flex:1;border:1px solid #e0e0e0;border-radius:8px;padding:6px 10px;font-size:13px;outline:none;font-family:inherit}
+#search:focus{border-color:#3b82f6}
+#content{flex:1;overflow-y:auto;padding:16px;position:relative}
+#drop-overlay{display:none;position:absolute;inset:0;background:rgba(59,130,246,.07);border:2px dashed #3b82f6;border-radius:10px;z-index:10;align-items:center;justify-content:center;flex-direction:column;gap:10px;font-size:16px;color:#2563eb;pointer-events:none}
+#drop-overlay i{font-size:44px}
+#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px}
+#list-view{display:none;width:100%}
+#list-view table{width:100%;border-collapse:collapse;font-size:13px}
+#list-view th{text-align:left;font-size:11px;font-weight:600;color:#aaa;padding:4px 8px 8px;border-bottom:1px solid #f0f0f0}
+#list-view td{padding:8px 8px;border-bottom:1px solid #f7f7f7;color:#333;cursor:pointer;vertical-align:middle}
+#list-view tr:hover td{background:#f8faff}
+#list-view tr.selected td{background:#dbeafe;color:#1d4ed8}
+.row-icon{font-size:18px;margin-right:6px;vertical-align:-3px}
+.fi{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 4px;border-radius:8px;cursor:pointer;transition:background .12s;position:relative}
+.fi:hover{background:#f0f4ff}
+.fi.selected{background:#dbeafe}
+.fi-thumb{width:60px;height:60px;border-radius:8px;object-fit:cover;border:1px solid #e0e0e0}
+.fi-icon{font-size:44px;line-height:1;width:60px;height:60px;display:flex;align-items:center;justify-content:center}
+.fi-name{font-size:11px;text-align:center;color:#333;word-break:break-all;max-width:88px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.fi.selected .fi-name{color:#1d4ed8}
+#empty{display:none;flex-direction:column;align-items:center;justify-content:center;height:300px;gap:12px;color:#bbb}
+#empty i{font-size:52px}
+#empty p{font-size:14px}
+#statusbar{height:28px;display:flex;align-items:center;padding:0 16px;border-top:1px solid #f0f0f0;font-size:11px;color:#aaa;flex-shrink:0}
+/* Preview */
+#preview{width:220px;min-width:220px;border-left:1px solid #f0f0f0;display:none;flex-direction:column;padding:16px 14px;gap:12px;overflow-y:auto;background:#fafafa}
+#preview.open{display:flex}
+#pv-img{width:100%;border-radius:8px;border:1px solid #e8e8e8;display:none;object-fit:contain;max-height:160px}
+#pv-icon{font-size:60px;text-align:center;display:none}
+#pv-title{font-size:13px;font-weight:600;color:#222;word-break:break-all}
+.pv-row{display:flex;flex-direction:column;gap:2px}
+.pv-key{font-size:11px;color:#aaa}
+.pv-val{font-size:12px;color:#444;word-break:break-all}
+#pv-dl{width:100%;margin-top:4px}
+/* Upload progress */
+#upload-progress{display:none;position:fixed;bottom:20px;right:20px;background:#fff;border:1px solid #e0e0e0;border-radius:10px;padding:14px 16px;min-width:240px;box-shadow:0 4px 20px rgba(0,0,0,0.1);z-index:100}
+#upload-progress p{font-size:13px;font-weight:500;color:#333;margin-bottom:8px}
+#prog-bar{width:100%;height:6px;background:#e8e8e8;border-radius:3px;overflow:hidden}
+#prog-fill{height:100%;background:#3b82f6;border-radius:3px;transition:width .2s;width:0%}
+#prog-label{font-size:11px;color:#aaa;margin-top:5px}
+/* Context menu */
+.ctx-menu{position:fixed;background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:4px;min-width:150px;z-index:200;box-shadow:0 4px 20px rgba(0,0,0,0.1)}
+.ctx-item{padding:7px 12px;font-size:13px;cursor:pointer;border-radius:5px;color:#333;display:flex;align-items:center;gap:8px;font-family:inherit}
+.ctx-item:hover{background:#f0f4ff}
+.ctx-item.danger{color:#dc2626}
+.ctx-item.danger:hover{background:#fef2f2}
+.ctx-div{height:1px;background:#f0f0f0;margin:3px 0}
+.rename-inp{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);width:88px;font-size:11px;border:1px solid #3b82f6;border-radius:4px;padding:2px 5px;background:#fff;color:#333;z-index:50;text-align:center;font-family:inherit;outline:none}
+#content::-webkit-scrollbar{width:6px}
+#content::-webkit-scrollbar-thumb{background:#e0e0e0;border-radius:3px}
+</style>
+</head>
+<body>
+
+<header>
+  <i class="ti ti-cloud" style="font-size:20px;color:#3b82f6"></i>
+  <h1>My Storage</h1>
+  <div id="used-bar-wrap">
+    <div id="used-bar"><div id="used-fill" style="width:0%"></div></div>
+    <span id="used-label">0 B</span>
+  </div>
+</header>
+
+<div id="main">
+  <div id="sidebar">
+    <div class="sb-label">Filter</div>
+    <div class="sb-item active" onclick="filterBy('all',this)"><i class="ti ti-folder-open"></i>All Files</div>
+    <div class="sb-item" onclick="filterBy('image',this)"><i class="ti ti-photo"></i>Images</div>
+    <div class="sb-item" onclick="filterBy('video',this)"><i class="ti ti-video"></i>Videos</div>
+    <div class="sb-item" onclick="filterBy('audio',this)"><i class="ti ti-music"></i>Audio</div>
+    <div class="sb-item" onclick="filterBy('doc',this)"><i class="ti ti-file-text"></i>Documents</div>
+    <div class="sb-item" onclick="filterBy('other',this)"><i class="ti ti-file"></i>Other</div>
+  </div>
+
+  <div id="panel">
+    <div id="toolbar">
+      <label class="tbtn primary" style="cursor:pointer">
+        <i class="ti ti-upload"></i> Upload
+        <input type="file" id="file-input" multiple style="display:none" onchange="uploadFiles(this.files)">
+      </label>
+      <button class="tbtn" id="del-btn" style="display:none" onclick="deleteSelected()"><i class="ti ti-trash"></i> Delete</button>
+      <button class="tbtn" id="dl-btn" style="display:none" onclick="downloadSelected()"><i class="ti ti-download"></i> Download</button>
+      <input type="text" id="search" placeholder="Search files..." oninput="render()">
+      <div style="display:flex;border:1px solid #ddd;border-radius:8px;overflow:hidden">
+        <button class="tbtn" style="border:none;border-radius:0" id="btn-grid" onclick="setView('grid')"><i class="ti ti-layout-grid"></i></button>
+        <button class="tbtn" style="border:none;border-radius:0;border-left:1px solid #ddd" id="btn-list" onclick="setView('list')"><i class="ti ti-list"></i></button>
+      </div>
+      <button class="tbtn" onclick="togglePreview()"><i class="ti ti-info-circle"></i></button>
+    </div>
+
+    <div style="display:flex;flex:1;overflow:hidden">
+      <div id="content">
+        <div id="drop-overlay"><i class="ti ti-cloud-upload"></i><span>Drop files to upload</span></div>
+        <div id="grid"></div>
+        <div id="list-view"><table><thead><tr><th>Name</th><th>Type</th><th>Size</th><th>Modified</th></tr></thead><tbody id="list-body"></tbody></table></div>
+        <div id="empty"><i class="ti ti-cloud-upload"></i><p>No files yet — upload something!</p></div>
+      </div>
+      <div id="preview">
+        <div id="pv-title">—</div>
+        <img id="pv-img" alt="">
+        <div id="pv-icon"></div>
+        <div class="pv-row"><span class="pv-key">Type</span><span class="pv-val" id="pv-type">—</span></div>
+        <div class="pv-row"><span class="pv-key">Size</span><span class="pv-val" id="pv-size">—</span></div>
+        <div class="pv-row"><span class="pv-key">Modified</span><span class="pv-val" id="pv-mod">—</span></div>
+        <button class="tbtn primary" id="pv-dl" onclick="downloadSelected()"><i class="ti ti-download"></i> Download</button>
+      </div>
+    </div>
+    <div id="statusbar">Loading...</div>
+  </div>
+</div>
+
+<div id="upload-progress">
+  <p>Uploading files...</p>
+  <div id="prog-bar"><div id="prog-fill"></div></div>
+  <div id="prog-label">0%</div>
+</div>
+
+<script>
+const API = 'upload.php';
+let files = [];
+let selected = null;
+let currentFilter = 'all';
+let viewMode = 'grid';
+let ctxMenu = null;
+let previewOpen = false;
+
+function getType(mime, name) {
+  if (mime.startsWith('image/')) return 'image';
+  if (mime.startsWith('video/')) return 'video';
+  if (mime.startsWith('audio/')) return 'audio';
+  if (mime.includes('pdf') || mime.includes('word') || mime.includes('text') || /\.(pdf|doc|docx|txt|md|csv|xls|xlsx|ppt|pptx)$/i.test(name)) return 'doc';
+  return 'other';
+}
+
+function getIcon(type) {
+  return {image:'🖼️',video:'🎬',audio:'🎵',doc:'📄',other:'📦'}[type]||'📄';
+}
+
+function fmtSize(b) {
+  if(b<1024)return b+' B';
+  if(b<1048576)return (b/1024).toFixed(1)+' KB';
+  if(b<1073741824)return (b/1048576).toFixed(1)+' MB';
+  return (b/1073741824).toFixed(2)+' GB';
+}
+
+async function loadFiles() {
+  try {
+    const r = await fetch(API+'?action=list');
+    const data = await r.json();
+    files = data.map(f => ({ ...f, type: getType(f.mime||'', f.name), url: 'storage/' + encodeURIComponent(f.name) }));
+    render();
+  } catch(e) { document.getElementById('statusbar').textContent = 'Error loading files'; }
+}
+
+async function uploadFiles(fl) {
+  if (!fl.length) return;
+  const prog = document.getElementById('upload-progress');
+  const fill = document.getElementById('prog-fill');
+  const label = document.getElementById('prog-label');
+  prog.style.display = 'block';
+  const form = new FormData();
+  Array.from(fl).forEach(f => form.append('files[]', f));
+  const xhr = new XMLHttpRequest();
+  xhr.upload.onprogress = e => {
+    if (e.lengthComputable) {
+      const pct = Math.round(e.loaded / e.total * 100);
+      fill.style.width = pct + '%';
+      label.textContent = pct + '%';
+    }
+  };
+  xhr.onload = () => {
+    prog.style.display = 'none';
+    fill.style.width = '0%';
+    document.getElementById('file-input').value = '';
+    loadFiles();
+  };
+  xhr.open('POST', API+'?action=upload');
+  xhr.send(form);
+}
+
+async function deleteSelected() {
+  if (!selected) return;
+  if (!confirm('Delete "' + selected + '"?')) return;
+  await fetch(API+'?action=delete', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({name: selected}) });
+  selected = null;
+  loadFiles();
+}
+
+function downloadSelected() {
+  if (!selected) return;
+  const f = files.find(x => x.name === selected);
+  if (!f) return;
+  const a = document.createElement('a');
+  a.href = f.url;
+  a.download = f.name;
+  a.click();
+}
+
+function filterBy(t, el) {
+  currentFilter = t;
+  selected = null;
+  document.querySelectorAll('.sb-item').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+function getFiltered() {
+  const q = document.getElementById('search').value.toLowerCase();
+  return files.filter(f => (currentFilter === 'all' || f.type === currentFilter) && f.name.toLowerCase().includes(q));
+}
+
+function setView(v) {
+  viewMode = v;
+  document.getElementById('grid').style.display = v === 'grid' ? 'grid' : 'none';
+  document.getElementById('list-view').style.display = v === 'list' ? 'block' : 'none';
+  document.getElementById('btn-grid').style.background = v === 'grid' ? '#f0f4ff' : '';
+  document.getElementById('btn-list').style.background = v === 'list' ? '#f0f4ff' : '';
+}
+
+function selectFile(name, e) {
+  e && e.stopPropagation();
+  selected = selected === name ? null : name;
+  render();
+  if (selected && previewOpen) updatePreview();
+}
+
+function render() {
+  const filtered = getFiltered();
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('empty');
+  const lb = document.getElementById('list-body');
+  const sb = document.getElementById('statusbar');
+  const delBtn = document.getElementById('del-btn');
+  const dlBtn = document.getElementById('dl-btn');
+
+  empty.style.display = filtered.length === 0 ? 'flex' : 'none';
+
+  // Grid
+  grid.innerHTML = filtered.map(f => `
+    <div class="fi${selected===f.name?' selected':''}" onclick="selectFile('${f.name}',event)" ondblclick="downloadSelected()" oncontextmenu="showCtx(event,'${f.name}')">
+      ${f.type==='image' ? `<img class="fi-thumb" src="${f.url}" alt="${f.name}" loading="lazy">` : `<div class="fi-icon">${getIcon(f.type)}</div>`}
+      <div class="fi-name" id="name-${CSS.escape(f.name)}">${f.name}</div>
+    </div>
+  `).join('');
+
+  // List
+  lb.innerHTML = filtered.map(f => `
+    <tr class="${selected===f.name?'selected':''}" onclick="selectFile('${f.name}',event)" ondblclick="downloadSelected()" oncontextmenu="showCtx(event,'${f.name}')">
+      <td><span class="row-icon">${getIcon(f.type)}</span>${f.name}</td>
+      <td>${f.mime||f.type}</td>
+      <td>${fmtSize(f.size)}</td>
+      <td>${f.mod}</td>
+    </tr>
+  `).join('');
+
+  const total = filtered.reduce((a,f) => a+f.size, 0);
+  sb.textContent = `${filtered.length} item${filtered.length!==1?'s':''} — ${fmtSize(total)}${selected?' — "'+selected+'" selected':''}`;
+
+  const allTotal = files.reduce((a,f) => a+f.size, 0);
+  document.getElementById('used-label').textContent = fmtSize(allTotal);
+
+  const sel = selected && files.find(f => f.name === selected);
+  delBtn.style.display = sel ? 'flex' : 'none';
+  dlBtn.style.display = sel ? 'flex' : 'none';
+
+  setView(viewMode);
+  if (previewOpen && selected) updatePreview();
+}
+
+function updatePreview() {
+  const f = files.find(x => x.name === selected);
+  if (!f) return;
+  document.getElementById('pv-title').textContent = f.name;
+  document.getElementById('pv-type').textContent = f.mime || f.type;
+  document.getElementById('pv-size').textContent = fmtSize(f.size);
+  document.getElementById('pv-mod').textContent = f.mod;
+  const img = document.getElementById('pv-img');
+  const ic = document.getElementById('pv-icon');
+  if (f.type === 'image') { img.src = f.url; img.style.display='block'; ic.style.display='none'; }
+  else { img.style.display='none'; ic.style.display='block'; ic.textContent = getIcon(f.type); }
+}
+
+function togglePreview() {
+  previewOpen = !previewOpen;
+  document.getElementById('preview').classList.toggle('open', previewOpen);
+  if (previewOpen && selected) updatePreview();
+}
+
+function showCtx(e, name) {
+  e.preventDefault();
+  selected = name; render();
+  if (ctxMenu) ctxMenu.remove();
+  const m = document.createElement('div');
+  m.className = 'ctx-menu';
+  m.style.left = Math.min(e.clientX, window.innerWidth-160)+'px';
+  m.style.top = Math.min(e.clientY, window.innerHeight-130)+'px';
+  m.innerHTML = `
+    <div class="ctx-item" onclick="downloadSelected();closeCtx()"><i class='ti ti-download'></i>Download</div>
+    <div class="ctx-item" onclick="startRename('${name}');closeCtx()"><i class='ti ti-pencil'></i>Rename</div>
+    <div class="ctx-div"></div>
+    <div class="ctx-item danger" onclick="deleteSelected();closeCtx()"><i class='ti ti-trash'></i>Delete</div>
+  `;
+  document.body.appendChild(m);
+  ctxMenu = m;
+  setTimeout(() => document.addEventListener('click', closeCtx, {once:true}), 10);
+}
+
+function closeCtx() { if(ctxMenu){ctxMenu.remove();ctxMenu=null;} }
+
+async function startRename(oldName) {
+  const newName = prompt('New name:', oldName);
+  if (!newName || newName === oldName) return;
+  await fetch(API+'?action=rename', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({old:oldName, new:newName}) });
+  selected = newName;
+  loadFiles();
+}
+
+// Drag & drop
+const content = document.getElementById('content');
+content.addEventListener('dragover', e => { e.preventDefault(); document.getElementById('drop-overlay').style.display='flex'; });
+content.addEventListener('dragleave', e => { if(!content.contains(e.relatedTarget)) document.getElementById('drop-overlay').style.display='none'; });
+content.addEventListener('drop', e => { e.preventDefault(); document.getElementById('drop-overlay').style.display='none'; uploadFiles(e.dataTransfer.files); });
+content.addEventListener('click', e => { if(e.target===content||e.target.id==='grid'){selected=null;render();} });
+
+loadFiles();
+</script>
+</body>
+</html>
