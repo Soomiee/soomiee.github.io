@@ -107,7 +107,7 @@ header h1{font-size:16px;font-weight:600;color:#1a1a1a;flex:1}
     <div id="toolbar">
       <label class="tbtn primary" style="cursor:pointer">
         <i class="ti ti-upload"></i> Upload
-        <input type="file" id="file-input" multiple style="display:none" onchange="uploadFiles(this.files)">
+        <input type="file" id="file-input" name="files[]" multiple style="display:none" onchange="uploadFiles(this.files)">
       </label>
       <button class="tbtn" id="del-btn" style="display:none" onclick="deleteSelected()"><i class="ti ti-trash"></i> Delete</button>
       <button class="tbtn" id="dl-btn" style="display:none" onclick="downloadSelected()"><i class="ti ti-download"></i> Download</button>
@@ -189,8 +189,11 @@ async function uploadFiles(fl) {
   const fill = document.getElementById('prog-fill');
   const label = document.getElementById('prog-label');
   prog.style.display = 'block';
+  
   const form = new FormData();
-  Array.from(fl).forEach(f => form.append('files[]', f));
+  // تأكيد إرسال الملفات بالاسم الصحيح المتوافق مع PHP
+  Array.from(fl).forEach(f => form.append('files[]', f)); 
+  
   const xhr = new XMLHttpRequest();
   xhr.upload.onprogress = e => {
     if (e.lengthComputable) {
